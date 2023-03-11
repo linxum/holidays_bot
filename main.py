@@ -6,7 +6,7 @@ import datetime
 import schedule
 from multiprocessing.context import Process
 
-token = '6015803490:AAGdxZMxVZAV7-PgADvxBcIOvM_8_06FTIc'
+token = '<YOUR TOKEN>'
 bot = telebot.TeleBot(token)
 
 dt = datetime.datetime.now()
