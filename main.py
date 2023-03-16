@@ -88,7 +88,7 @@ def mail():
                     bot.send_message(i, "Сегодня праздник: " + row['holiday'])
 
 
-schedule.every().day.at("02:14").do(mail)
+schedule.every().day.at("06:00").do(mail)
 
 
 class ScheduleMessage():
