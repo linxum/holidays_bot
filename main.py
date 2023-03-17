@@ -7,7 +7,7 @@ import schedule
 from multiprocessing.context import Process
 # from background import keep_alive
 
-token = '6015803490:AAGdxZMxVZAV7-PgADvxBcIOvM_8_06FTIc'
+token = '<YOUR TOKEN>'
 bot = telebot.TeleBot(token)
 
 dt = datetime.datetime.now()
@@ -20,15 +20,12 @@ yesterday = dt - datetime.timedelta(days=1)
 yes_day = yesterday.day
 yes_month = yesterday.month
 
+key_menu = types.ReplyKeyboardMarkup(True, True)
+key_menu.add("Сегодня", "Завтра", "Вчера", "Включить рассылку", "Отключить рассылку")
+
 
 @bot.message_handler(commands=['start'])
 def com_start(message):
-    key_menu = types.ReplyKeyboardMarkup(True, True)
-    key_menu.add(types.KeyboardButton("Сегодня"))
-    key_menu.add(types.KeyboardButton("Завтра"))
-    key_menu.add(types.KeyboardButton("Вчера"))
-    key_menu.add(types.KeyboardButton("Включить рассылку"))
-    key_menu.add(types.KeyboardButton("Отключить рассылку"))
     bot.send_message(message.chat.id, "Привет! Выбирай день и получишь праздник", reply_markup=key_menu)
     print(message.chat.id)
 
@@ -40,21 +37,21 @@ def func_text(message):
             reader = csv.DictReader(f)
             for row in reader:
                 if int(row['day']) == day and int(row['month']) == month:
-                    bot.send_message(message.chat.id, "Сегодня праздник: " + row['holiday'])
+                    bot.send_message(message.chat.id, "Сегодня праздник: " + row['holiday'], reply_markup=key_menu)
 
     elif message.text == "Завтра":
         with open('holidays.csv', newline='', encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if int(row['day']) == tom_day and int(row['month']) == tom_month:
-                    bot.send_message(message.chat.id, "Завтра будет праздник: " + row['holiday'])
+                    bot.send_message(message.chat.id, "Завтра будет праздник: " + row['holiday'], reply_markup=key_menu)
 
     elif message.text == "Вчера":
         with open('holidays.csv', newline='', encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 if int(row['day']) == yes_day and int(row['month']) == yes_month:
-                    bot.send_message(message.chat.id, "Вчера был праздник: " + row['holiday'])
+                    bot.send_message(message.chat.id, "Вчера был праздник: " + row['holiday'], reply_markup=key_menu)
 
     elif message.text == "Включить рассылку":
         flag = False
@@ -65,9 +62,9 @@ def func_text(message):
 
             if not flag:
                 print(message.chat.id, file=f)
-                bot.send_message(message.chat.id, "Рассылка включена)")
+                bot.send_message(message.chat.id, "Рассылка включена)", reply_markup=key_menu)
             else:
-                bot.send_message(message.chat.id, "Рассылка уже включена")
+                bot.send_message(message.chat.id, "Рассылка уже включена", reply_markup=key_menu)
 
     elif message.text == "Отключить рассылку":
         with open("id.txt", "r") as f:
@@ -76,7 +73,7 @@ def func_text(message):
             for line in lines:
                 if line.strip("\n") != str(message.chat.id):
                     f.write(line)
-        bot.send_message(message.chat.id, "Рассылка отключена(")
+        bot.send_message(message.chat.id, "Рассылка отключена(", reply_markup=key_menu)
 
 
 def mail():
